@@ -25,7 +25,17 @@ function dosignIn(event) {
 
      var itemList=document.getElementById('details')
      itemList.appendChild(li)
-     localStorage.setItem(inputName,inputemail,phoneInput,dateInput,timeInput)
+     let storageObj={name:inputName,
+                    email:inputemail,
+                    phone:phoneInput,
+                    time:timeInput,
+                    date:dateInput
+     }
+     let storageObj_serialized=JSON.stringify(storageObj)
+     //storing values considering email as unique id
+     localStorage.setItem(inputemail,storageObj_serialized)
+     let storage_values=JSON.parse(localStorage.getItem(inputemail))
+     console.log(storage)    
      sessionStorage.setItem(inputName,inputemail)
 
 
