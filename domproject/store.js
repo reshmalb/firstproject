@@ -1,7 +1,8 @@
 var form=document.getElementById('signIn-form')
 form.addEventListener('submit',dosignIn)
 var details=document.getElementById('details')
- details.addEventListener('click',removeDetails)
+details.addEventListener('click',removeDetails)
+details.addEventListener('click',editDetails)
 
 
 function dosignIn(event) {
@@ -31,7 +32,11 @@ function dosignIn(event) {
      var btnChild=document.createTextNode('Delete')
      btndel.appendChild(btnChild)
      li.appendChild(btndel)
-
+      var btnEdit=document.createElement('button')
+      btnEdit.className="btn btn-primary btn-sm float-right edit"
+      var editChild=document.createTextNode('Edit')
+      btnEdit.appendChild(editChild)
+      li.appendChild(btnEdit)
      var itemList=document.getElementById('details')
      itemList.appendChild(li)
      let storageObj={name:inputName,
@@ -58,5 +63,23 @@ function dosignIn(event) {
       }
 
   }
+
+  }
+  function editDetails(e){
+    var inputemail=document.getElementById('email').value;
+    if(e.target.classList.contains('edit')){
+          var userDetails= JSON.parse(localStorage.getItem(inputemail))
+          //POPULATE THE INPUT BOXES        
+          document.getElementById('name').value=userDetails.name; 
+          document.getElementById('email').value=userDetails.email
+           document.getElementById('phone1').value=userDetails.phone
+            document.getElementById('time1').value=userDetails.time
+            document.getElementById('date1').value  =userDetails.date       
+             var li=e.target.parentElement;
+             details.removeChild(li)
+             localStorage.removeItem(inputemail)
+          
+      }
+
 
   }
