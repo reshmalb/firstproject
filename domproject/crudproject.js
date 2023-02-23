@@ -67,6 +67,8 @@ function dosignIn(event) {
 function showOutput(data){
     var li=document.createElement('li')
    li.className='list-group-item'
+ li.appendChild(document.createTextNode(data._id))
+
    li.appendChild(document.createTextNode(data.name))
    li.appendChild(document.createTextNode(data.email))
    li.appendChild(document.createTextNode(data.phone))
@@ -102,16 +104,30 @@ function showOutput(data){
     //  sessionStorage.setItem(inputName,inputemail)
   
   function removeDetails(e){
-    var inputemail=document.getElementById('email').value;
-    if(e.target.classList.contains('delete')){     
-      if(confirm('Are you sure to delete this user details?')){
-          var li=e.target.parentElement;
-          details.removeChild(li)
-          localStorage.removeItem(inputemail)
-          
-      }
+    if(e.target.classList.contains('delete')){
+        //console.log(1)
+        if(confirm('Are you sure?')){
+            var li=e.target.parentElement;
+            itemList.removeChild(li)
+            var id=li.childNodes[0]
+            axios.delete("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData"/+id)
+            .then(res=>console.log(res))
+            .catch(err=>console.log(err))
+        }       
 
-  }
+    }
+    window.addEventListener("DOMContentLoaded",()=>
+    axios.get("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData")
+    .then(res=>{
+     console.log(res)
+     for(let i=0;i<res.data.length;i++){
+        showOutput(res.data[i])
+     }
+
+    })
+    .catch(err=>{
+     console.log(err)
+    }))
 
   }
   function editDetails(e){
