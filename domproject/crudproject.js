@@ -1,12 +1,22 @@
 var form=document.getElementById('signIn-form')
 form.addEventListener('submit',dosignIn)
-var details=document.getElementById('details')
-details.addEventListener('click',removeDetails)
-details.addEventListener('click',editDetails)
+
+window.addEventListener("DOMContentLoaded",()=>
+axios.get("https://crudcrud.com/api/2c6adfba735a47f0adb8a96dde7a7ac1/AppointmnetData")
+.then(res=>{
+ console.log(res)
+ for(let i=0;i<res.data.length;i++){
+       showOutputOnScreen(res.data[i])
+ }
+
+})
+.catch(err=>{
+ console.log(err)
+}))
+
 
 
 function dosignIn(event) {
-
 
     event.preventDefault();
    var name=document.getElementById('name').value
@@ -14,32 +24,7 @@ function dosignIn(event) {
    var phone=document.getElementById('phone1').value
    var time=document.getElementById('time1').value
    var date=document.getElementById('date1').value
-//    var li=document.createElement('li')
-//    li.className='list-group-item'
-//    const nameChild=document.createTextNode(inputName+" ")
-//    const emailChild=document.createTextNode("  "+inputemail)
-//    const phchild=document.createTextNode("  "+phoneInput+" ")
-//    const tmchild=document.createTextNode("  "+timeInput)
-//    const dtchild=document.createTextNode("  "+dateInput)
 
-//      li.appendChild(nameChild)
-//      li.appendChild(emailChild)
-//      li.appendChild(phchild)
-//      li.appendChild(dtchild)
-//      li.appendChild(tmchild)
-//      var btndel=document.createElement('button')
-//      btndel.className="btn btn-danger btn-sm  float-right delete"
-//      btndel.id='DelDetails'
-//      var btnChild=document.createTextNode('Delete')
-//      btndel.appendChild(btnChild)
-//      li.appendChild(btndel)
-//       var btnEdit=document.createElement('button')
-//       btnEdit.className="btn btn-primary btn-sm float-right edit"
-//       var editChild=document.createTextNode('Edit')
-//       btnEdit.appendChild(editChild)
-//       li.appendChild(btnEdit)
-//      var itemList=document.getElementById('details')
-//      itemList.appendChild(li)
      let storageObj={name,
                     email,
                     phone,                  
@@ -47,104 +32,62 @@ function dosignIn(event) {
                     time
                     }
 
-     axios.post("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData",storageObj)
+     axios.post("https://crudcrud.com/api/2c6adfba735a47f0adb8a96dde7a7ac1/AppointmnetData",storageObj)
      .then(respose=>console.log(respose))
       .catch(err=>console.log(err))
 }
-       window.addEventListener("DOMContentLoaded",()=>
-       axios.get("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData")
-       .then(res=>{
-        console.log(res)
-        for(let i=0;i<res.data.length;i++){
-           showOutput(res.data[i])
-        }
+      
 
-       })
-       .catch(err=>{
-        console.log(err)
-       }))
-
-function showOutput(data){
-    var li=document.createElement('li')
-   li.className='list-group-item'
- li.appendChild(document.createTextNode(data._id))
-
-   li.appendChild(document.createTextNode(data.name))
-   li.appendChild(document.createTextNode(data.email))
-   li.appendChild(document.createTextNode(data.phone))
-   li.appendChild(document.createTextNode(data.date))
-   li.appendChild(document.createTextNode(data.time))
-   var btndel=document.createElement('button')
-     btndel.className="btn btn-danger btn-sm  float-right delete"
-     btndel.id='DelDetails'
-     var btnChild=document.createTextNode('Delete')
-     btndel.appendChild(btnChild)
-     li.appendChild(btndel)
-      var btnEdit=document.createElement('button')
-      btnEdit.className="btn btn-primary btn-sm float-right edit"
-      var editChild=document.createTextNode('Edit')
-      btnEdit.appendChild(editChild)
-      li.appendChild(btnEdit)
-     var itemList=document.getElementById('details')
-     itemList.appendChild(li)
-
-  
-
+function showOutputOnScreen(data){
+  const parentNode=document.getElementById('details');
+  console.log(data._id)
+  const childHtml=`<li  id=${data._id}>${data.name}-${data.email}-
+                     ${data.phone}-${data.date}
+                     
+                     <button  className="btn btn-danger btn-sm  float-right delete" onClick= removeDetails('${data._id}')> Delete</button>
+                     <button className="btn btn-primary btn-sm  float-right edit" onClick= editDetails('${data._id}')> Edit</button>
+                     </li>`
+                     parentNode.innerHTML=parentNode.innerHTML+childHtml;
 }
 
 
 
 
 
-    //  let storageObj_serialized=JSON.stringify(storageObj)
-    //  //storing values considering email as unique id
-    //  localStorage.setItem(inputemail,storageObj_serialized)
-    //  let storage_values=JSON.parse(localStorage.getItem(inputemail))
-   
-    //  sessionStorage.setItem(inputName,inputemail)
+
   
-  function removeDetails(e){
-    if(e.target.classList.contains('delete')){
-        //console.log(1)
-        if(confirm('Are you sure?')){
-            var li=e.target.parentElement;
-            itemList.removeChild(li)
-            var id=li.childNodes[0]
-            axios.delete("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData"/+id)
-            .then(res=>console.log(res))
+  function removeDetails(id){  
+             // var id=data._id;
+            axios.delete(`https://crudcrud.com/api/2c6adfba735a47f0adb8a96dde7a7ac1/AppointmnetData/${id}`)
+            .then(res=>{console.log(res)
+              removeUserDetailsFromScreen(id)})
             .catch(err=>console.log(err))
-        }       
-
-    }
-    window.addEventListener("DOMContentLoaded",()=>
-    axios.get("https://crudcrud.com/api/b700b36ad7b7452b99174ae1ae647e97/AppointmnetData")
-    .then(res=>{
-     console.log(res)
-     for(let i=0;i<res.data.length;i++){
-        showOutput(res.data[i])
-     }
-
-    })
-    .catch(err=>{
-     console.log(err)
-    }))
-
-  }
-  function editDetails(e){
-    var inputemail=document.getElementById('email').value;
-    if(e.target.classList.contains('edit')){
-          var userDetails= JSON.parse(localStorage.getItem(inputemail))
-          //POPULATE THE INPUT BOXES        
-          document.getElementById('name').value=userDetails.name; 
-          document.getElementById('email').value=userDetails.email
-           document.getElementById('phone1').value=userDetails.phone
-            document.getElementById('time1').value=userDetails.time
-            document.getElementById('date1').value  =userDetails.date       
-             var li=e.target.parentElement;
-             details.removeChild(li)
-             localStorage.removeItem(inputemail)
           
+         }
+            
+
+    function removeUserDetailsFromScreen(id){
+      var parentNode=document.getElementById('details')
+      var childTobeDeleted=document.getElementById(id)
+      if(childTobeDeleted){
+        parentNode.removeChild(childTobeDeleted)
       }
+    }
+  function editDetails(id){  
+    axios.get(`https://crudcrud.com/api/2c6adfba735a47f0adb8a96dde7a7ac1/AppointmnetData/${id}`)
+.then(res=>{
+ console.log(res)
+ document.getElementById('name').value=res.data.name; 
+ document.getElementById('email').value=res.data.email
+  document.getElementById('phone1').value=res.data.phone
+   document.getElementById('time1').value=res.data.time
+   document.getElementById('date1').value  =res.data.date    
+   removeDetails(id);
+ 
+})
+.catch(err=>{
+ console.log(err)
+})
+     
 
-
-  }
+ }
